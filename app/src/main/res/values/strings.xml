@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Cartrige Arta</string>
+    <string name="add_btn">ADD</string>
+    <string name="input_mark">Add cartrige</string>
+</resources>
