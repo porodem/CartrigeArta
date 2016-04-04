@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Created by porod on 28.03.2016.
@@ -60,6 +61,15 @@ public class DB {
     //take all data from DB_TABLE
     public Cursor getAllData() {
         return mDB.query(DB_TABLE, null, null, null, null, null, null, null);
+    }
+
+    //put info to DB_TABLE
+    public void addRec(String model) {
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_MODEL, model);
+        long rowID = mDB.insert(DB_TABLE, null, cv);
+        Log.d(LOG_TAG, "Added record with id: " + rowID);
+
     }
 
     // ----- Class for create and handle DB -----

@@ -1,15 +1,21 @@
 package com.porodem.cartrigearta;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Loader;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
 
@@ -24,9 +30,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     SimpleCursorAdapter scAdapter;
     Cursor c;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,9 +38,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //open DB connections
         db = new DB(this);
         db.open();
-
-        //get cursor
-        //cursor = db.getAllData();
 
         //columns
         String[] from = new String[] {DB.COLUMN_MODEL, DB.COLUMN_MARK};
@@ -50,12 +50,46 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         //create loader for data reading
         getLoaderManager().initLoader(0, null, this);
-
-        c = db.getAllData();
-        logCursor(c);
-        c.close();
     }
 
+    //Button "ADD"
+    public void onButtonAdd(View view) {
+        //Toast.makeText(this, "ADD Button: ", Toast.LENGTH_SHORT).show();
+        LayoutInflater li = LayoutInflater.from(context);
+        View promptsView = li.inflate(R.layout.prompt, null);
+        //create alert Dialog
+        AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(context);
+        //config prompt.xml for our AlertDialog
+        mDialogBuilder.setView(promptsView);
+        //
+        final EditText userInput = (EditText)promptsView.findViewById(R.id.input_cartridge);
+        //config message in dialog
+        mDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                String cartridgeMark = userInput.getText().toString();
+                                db.addRec(cartridgeMark);
+                                //get new cursor with data
+                                getLoaderManager().getLoader(0).forceLoad();
+                                //Toast.makeText(getBaseContext(), "message: " , Toast.LENGTH_LONG).show();
+                            }
+                        })
+                .setNegativeButton("Cancle",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+        //create dialog
+        AlertDialog alertDialog = mDialogBuilder.create();
+        //show it
+        alertDialog.show();
+    }
+
+
+    //cursor logging
     void logCursor(Cursor c) {
         if (c != null) {
             if (c.moveToFirst()) {
@@ -72,17 +106,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             Log.d(LOG_TAG, "Cursor is null");
     }
 
-
-
-/*
-    @Override
-    public LoaderManager getLoaderManager() {
-        return super.getLoaderManager();
-    }
-*/
+    //close connect when exit
     protected void onDestroy() {
         super.onDestroy();
-        //close connect when exit
         db.close();
     }
 
@@ -100,6 +126,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoaderReset(Loader<Cursor> loader) {
 
     }
+
+
 
     static class MyCursorLoader extends CursorLoader {
         DB db;
@@ -119,24 +147,4 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-    /*
-    static class MyCursorLoader extends CursorLoader {
-            DB db;
-        public MyCursorLoader(Context context, DB db) {
-            super(context);
-            this.db = db;
-        }
-        @Override
-        public Cursor loadInBackGround() {
-            Cursor cursor = db.getAllData();
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            }catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return cursor;
-        }
-    }
-
-*/
 }
