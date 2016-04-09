@@ -2,4 +2,17 @@
     <string name="app_name">Cartrige Arta</string>
     <string name="add_btn">ADD</string>
     <string name="input_mark">Add cartrige</string>
+
+    <string name="show_record">Show</string>
+
+    <string name="model">Модель</string>
+    <string name="mark">Код</string>
+    <string name="problem">Проблема</string>
+    <string name="fix">Ремонт</string>
+    <string name="cost">Цена</string>
+    <string name="user">Пользователь</string>
+    <string name="date">Дата</string>
+
+    <color name="itemName">#993322</color>
+    <color name="valueColor">#5500bb</color>
 </resources>

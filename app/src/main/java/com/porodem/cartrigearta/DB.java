@@ -72,6 +72,47 @@ public class DB {
 
     }
 
+    // reading current rec
+    public Cartridge getThisData(long id) {
+        Log.d(LOG_TAG, "-- getThisData --");
+        String selection = "_id = ?";
+        String xid = String.valueOf(id);
+        String [] selectionAgrs = new String[]{xid};
+
+        Cursor c = mDB.query(DB_TABLE, null, selection, selectionAgrs, null, null, null);
+        c.moveToLast();
+        int thisData = c.getColumnIndex(COLUMN_ID);
+        int thisDataModel = c.getColumnIndex(COLUMN_MODEL);
+        int thisDataMark = c.getColumnIndex(COLUMN_MARK);
+        int thisDataProblem = c.getColumnIndex(COLUMN_PROBLEM);
+        int thisDataFix = c.getColumnIndex(COLUMN_FIX);
+        int thisDataCost = c.getColumnIndex(COLUMN_COST);
+        int thisDataUser = c.getColumnIndex(COLUMN_USER);
+        int thisDataDate = c.getColumnIndex(COLUMN_DATE);
+
+        String readyID = c.getString(thisData);
+        String readyModel = c.getString(thisDataModel);
+        String readyMark = c.getString(thisDataMark);
+        String readyProblem = c.getString(thisDataProblem);
+        String readyFix = c.getString(thisDataFix);
+        String readyCost = c.getString(thisDataCost);
+        String readyUser = c.getString(thisDataUser);
+        String readyDate = c.getString(thisDataDate);
+
+        Log.d(LOG_TAG, "--- String readyMark: " + readyMark);
+        Cartridge cartridge = new Cartridge();
+        cartridge.cID = readyID;
+        cartridge.cModel = readyModel;
+        cartridge.cMark = readyMark;
+        cartridge.cProblem = readyProblem;
+        cartridge.cFix = readyFix;
+        cartridge.cCost = readyCost;
+        cartridge.cUser = readyUser;
+        cartridge.cDate = readyDate;
+
+        return cartridge;
+    }
+
     // ----- Class for create and handle DB -----
 
     private class DBHelper extends SQLiteOpenHelper {
