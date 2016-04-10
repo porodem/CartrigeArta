@@ -113,6 +113,22 @@ public class DB {
         return cartridge;
     }
 
+    //edit cartridge record
+    public void editRec(String model, String mark, String problem, String fix, String cost,
+                        String user, String date, String id){
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_MODEL, model);
+        cv.put(COLUMN_MARK, mark);
+        cv.put(COLUMN_PROBLEM, problem);
+        cv.put(COLUMN_FIX, fix);
+        cv.put(COLUMN_COST, cost);
+        cv.put(COLUMN_USER, user);
+        cv.put(COLUMN_DATE, date);
+        int updCartridge = mDB.update(DB_TABLE, cv, "_id = ?", new String[]{id});
+        Log.d(LOG_TAG, "Edited record with id: " + updCartridge);
+
+    }
+
     // ----- Class for create and handle DB -----
 
     private class DBHelper extends SQLiteOpenHelper {

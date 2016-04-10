@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     //constants for context menu
     private static final int CM_SHOW = 1;
+    private static final int CM_EDIT = 2;
+    private static final int CM_DELITE = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreateContextMenu(menu, v, menuInfo);
 
         menu.add(0, CM_SHOW, 0, R.string.show_record);
+        menu.add(0, CM_EDIT, 0, R.string.edit_record);
     }
 
     public boolean onContextItemSelected(MenuItem item) {
@@ -145,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     String CartDate = thisCart.cDate;
 
                     Intent intentShow = new Intent(this, ShowActivity.class);
-                    intentShow.putExtra("tvID", CartID);
+                    intentShow.putExtra("ID", CartID);
                     intentShow.putExtra("tvModel", CartModel);
                     intentShow.putExtra("tvMark", CartMark);
                     intentShow.putExtra("tvProblem", CartProblem);
@@ -155,6 +158,33 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     intentShow.putExtra("tvDate", CartDate);
                     startActivity(intentShow);
 
+                }
+                break;
+            case CM_EDIT:
+                if (item.getItemId()==CM_EDIT) {
+                    AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) item
+                            .getMenuInfo();
+                    Cartridge thisCart = db.getThisData(acmi.id);
+
+                    String CartID = thisCart.cID;
+                    String CartModel = thisCart.cModel;
+                    String CartMark = thisCart.cMark;
+                    String CartProblem = thisCart.cProblem;
+                    String CartFix = thisCart.cFix;
+                    String CartCost = thisCart.cCost;
+                    String CartUser = thisCart.cUser;
+                    String CartDate = thisCart.cDate;
+
+                    Intent intentEdit = new Intent(this, EditActivity.class);
+                    intentEdit.putExtra("ID", CartID);
+                    intentEdit.putExtra("tvModel", CartModel);
+                    intentEdit.putExtra("tvMark", CartMark);
+                    intentEdit.putExtra("tvProblem", CartProblem);
+                    intentEdit.putExtra("tvFix", CartFix);
+                    intentEdit.putExtra("tvCost", CartCost);
+                    intentEdit.putExtra("tvUer", CartUser);
+                    intentEdit.putExtra("tvDate", CartDate);
+                    startActivity(intentEdit);
                 }
                 break;
         }

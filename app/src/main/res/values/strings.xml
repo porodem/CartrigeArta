@@ -4,6 +4,7 @@
     <string name="input_mark">Add cartrige</string>
 
     <string name="show_record">Show</string>
+    <string name="edit_record">Edit</string>
 
     <string name="model">Модель</string>
     <string name="mark">Код</string>
@@ -15,4 +16,6 @@
 
     <color name="itemName">#993322</color>
     <color name="valueColor">#5500bb</color>
+
+    <string name="apply_edit">Применить</string>
 </resources>

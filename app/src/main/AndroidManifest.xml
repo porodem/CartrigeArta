@@ -16,8 +16,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".ShowActivity">
-
         </activity>
+
+        <activity android:name=".EditActivity">
+        </activity>
+
     </application>
 
 </manifest>
