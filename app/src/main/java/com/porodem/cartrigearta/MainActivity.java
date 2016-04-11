@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int CM_EDIT = 2;
     private static final int CM_DELITE = 3;
 
+    final int DIALOG_DELETE = 4;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,8 +52,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         db.open();
 
         //columns
-        String[] from = new String[] {DB.COLUMN_MODEL, DB.COLUMN_MARK};
-        int[] to = new int[] {R.id.tvModel, R.id.tvMark};
+        String[] from = new String[] {DB.COLUMN_MODEL, DB.COLUMN_MARK, DB.COLUMN_USER};
+        int[] to = new int[] {R.id.tvModel, R.id.tvMark, R.id.tvUser};
 
         //create adapter and config list
         scAdapter = new SimpleCursorAdapter(this, R.layout.item, null, from, to, 0);
@@ -126,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         menu.add(0, CM_SHOW, 0, R.string.show_record);
         menu.add(0, CM_EDIT, 0, R.string.edit_record);
+        menu.add(0, CM_DELITE, 0, R.string.del_record);
     }
 
     public boolean onContextItemSelected(MenuItem item) {
@@ -146,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     String CartCost = thisCart.cCost;
                     String CartUser = thisCart.cUser;
                     String CartDate = thisCart.cDate;
+                    String CartStatus = thisCart.cStatus;
 
                     Intent intentShow = new Intent(this, ShowActivity.class);
                     intentShow.putExtra("ID", CartID);
@@ -156,6 +160,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     intentShow.putExtra("tvCost", CartCost);
                     intentShow.putExtra("tvUer", CartUser);
                     intentShow.putExtra("tvDate", CartDate);
+                    intentShow.putExtra("tvStatus", CartStatus);
                     startActivity(intentShow);
 
                 }
@@ -174,6 +179,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     String CartCost = thisCart.cCost;
                     String CartUser = thisCart.cUser;
                     String CartDate = thisCart.cDate;
+                    String CartStatus = thisCart.cStatus;
 
                     Intent intentEdit = new Intent(this, EditActivity.class);
                     intentEdit.putExtra("ID", CartID);
@@ -184,7 +190,21 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     intentEdit.putExtra("tvCost", CartCost);
                     intentEdit.putExtra("tvUer", CartUser);
                     intentEdit.putExtra("tvDate", CartDate);
+                    intentEdit.putExtra("tvStatus",CartStatus);
                     startActivity(intentEdit);
+                }
+                break;
+            case CM_DELITE:
+                if (item.getItemId()==CM_DELITE) {
+                    showDialog(DIALOG_DELETE);
+                    //get from context menu item data
+                    AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) item
+                            .getMenuInfo();
+                    //extract id off user and delete this user from DB
+                    db.delRec(acmi.id);
+                    //get new cursor
+                    getLoaderManager().getLoader(0).forceLoad();
+                    return true;
                 }
                 break;
         }

@@ -25,6 +25,7 @@ public class DB {
     public static final String COLUMN_COST = "cost";
     public static final String COLUMN_USER = "user";
     public static final String COLUMN_DATE = "date";
+    public static final String COLUMN_STATUS = "status";
 
     private static final String DB_CREATE =
             "create table " + DB_TABLE + "(" +
@@ -35,7 +36,8 @@ public class DB {
                     COLUMN_FIX + " text, " +
                     COLUMN_COST + " text, " +
                     COLUMN_USER + " text, " +
-                    COLUMN_DATE + " text" +
+                    COLUMN_DATE + " text, " +
+                    COLUMN_STATUS + " text" +
                     ");";
     private final Context mCtx;
 
@@ -89,6 +91,7 @@ public class DB {
         int thisDataCost = c.getColumnIndex(COLUMN_COST);
         int thisDataUser = c.getColumnIndex(COLUMN_USER);
         int thisDataDate = c.getColumnIndex(COLUMN_DATE);
+        int thisDataStatus = c.getColumnIndex(COLUMN_STATUS);
 
         String readyID = c.getString(thisData);
         String readyModel = c.getString(thisDataModel);
@@ -98,6 +101,7 @@ public class DB {
         String readyCost = c.getString(thisDataCost);
         String readyUser = c.getString(thisDataUser);
         String readyDate = c.getString(thisDataDate);
+        String readyStatus = c.getString(thisDataStatus);
 
         Log.d(LOG_TAG, "--- String readyMark: " + readyMark);
         Cartridge cartridge = new Cartridge();
@@ -109,13 +113,14 @@ public class DB {
         cartridge.cCost = readyCost;
         cartridge.cUser = readyUser;
         cartridge.cDate = readyDate;
+        cartridge.cStatus = readyStatus;
 
         return cartridge;
     }
 
     //edit cartridge record
     public void editRec(String model, String mark, String problem, String fix, String cost,
-                        String user, String date, String id){
+                        String user, String date, String status, String id){
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_MODEL, model);
         cv.put(COLUMN_MARK, mark);
@@ -124,9 +129,16 @@ public class DB {
         cv.put(COLUMN_COST, cost);
         cv.put(COLUMN_USER, user);
         cv.put(COLUMN_DATE, date);
+        cv.put(COLUMN_STATUS, status);
         int updCartridge = mDB.update(DB_TABLE, cv, "_id = ?", new String[]{id});
         Log.d(LOG_TAG, "Edited record with id: " + updCartridge);
 
+    }
+
+    //del info from DB_TABLE
+    public void delRec(long id) {
+        mDB.delete(DB_TABLE, COLUMN_ID + " = " + id, null);
+        Log.d(LOG_TAG, "--- Deleted ID : " + id);
     }
 
     // ----- Class for create and handle DB -----

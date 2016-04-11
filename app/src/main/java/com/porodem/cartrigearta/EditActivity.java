@@ -18,6 +18,7 @@ public class EditActivity extends MainActivity {
     EditText etCost;
     EditText etUser;
     EditText etDate;
+    EditText etStatus;
 
     String cartID;
 
@@ -32,6 +33,7 @@ public class EditActivity extends MainActivity {
         etCost = (EditText)findViewById(R.id.etCost);
         etUser = (EditText)findViewById(R.id.etUser);
         etDate = (EditText)findViewById(R.id.etUser);
+        etStatus = (EditText)findViewById(R.id.etStatus);
 
         Intent intentEdit = getIntent();
         String intModel = intentEdit.getStringExtra("tvModel");
@@ -41,6 +43,7 @@ public class EditActivity extends MainActivity {
         String intCost = intentEdit.getStringExtra("tvCost");
         String intUser = intentEdit.getStringExtra("tvUser");
         String intDate = intentEdit.getStringExtra("tvDate");
+        String intStatus = intentEdit.getStringExtra("tvStatus");
         cartID = intentEdit.getStringExtra("ID");
         etModel.setText(intModel);
         etMark.setText(intMark);
@@ -49,6 +52,7 @@ public class EditActivity extends MainActivity {
         etCost.setText(intCost);
         etUser.setText(intUser);
         etDate.setText(intDate);
+        etStatus.setText(intStatus);
     }
 
     public void ButtonApplyEdit(View view) {
@@ -59,8 +63,9 @@ public class EditActivity extends MainActivity {
         String costRec = etCost.getText().toString();
         String userRec = etUser.getText().toString();
         String dateRec = etDate.getText().toString();
+        String statusRec = etStatus.getText().toString();
 
-        db.editRec(modelRec, markRec, problemRec, fixRec, costRec, userRec, dateRec, cartID);
+        db.editRec(modelRec, markRec, problemRec, fixRec, costRec, userRec, dateRec, statusRec, cartID);
         getLoaderManager().getLoader(0).forceLoad();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

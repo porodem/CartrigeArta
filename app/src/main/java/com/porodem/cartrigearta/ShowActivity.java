@@ -17,6 +17,7 @@ public class ShowActivity extends AppCompatActivity {
     TextView tvCost;
     TextView tvUser;
     TextView tvDate;
+    TextView tvStatus;
 
     String etID;
 
@@ -31,6 +32,7 @@ public class ShowActivity extends AppCompatActivity {
         tvCost = (TextView)findViewById(R.id.tvCost);
         tvUser = (TextView)findViewById(R.id.tvUser);
         tvDate = (TextView)findViewById(R.id.tvDate);
+        tvStatus = (TextView)findViewById(R.id.tvStatus);
 
         Intent intentShow = getIntent();
         String intModel = intentShow.getStringExtra("tvModel");
@@ -40,6 +42,7 @@ public class ShowActivity extends AppCompatActivity {
         String intCost = intentShow.getStringExtra("tvCost");
         String intUser = intentShow.getStringExtra("tvUser");
         String intDate = intentShow.getStringExtra("tvDate");
+        String intStatus = intentShow.getStringExtra("tvStatus");
 
         tvModel.setText(intModel);
         tvMark.setText(intMark);
@@ -48,6 +51,7 @@ public class ShowActivity extends AppCompatActivity {
         tvCost.setText(intCost);
         tvUser.setText(intUser);
         tvDate.setText(intDate);
+        tvStatus.setText(intStatus);
 
 
     }

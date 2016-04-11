@@ -5,6 +5,7 @@
 
     <string name="show_record">Show</string>
     <string name="edit_record">Edit</string>
+    <string name="del_record">Delete</string>
 
     <string name="model">Модель</string>
     <string name="mark">Код</string>
@@ -13,8 +14,9 @@
     <string name="cost">Цена</string>
     <string name="user">Пользователь</string>
     <string name="date">Дата</string>
+    <string name="status">Состояние</string>
 
-    <color name="itemName">#993322</color>
+    <color name="itemName">#b41177</color>
     <color name="valueColor">#5500bb</color>
 
     <string name="apply_edit">Применить</string>

@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="20sp"
             android:text="Модель"
-            android:textSize="15dp"
+            android:textSize="20dp"
             android:textColor="@color/valueColor"/>
     </LinearLayout>
 
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="40sp"
             android:text="Код"
-            android:textSize="15dp"
+            android:textSize="20dp"
             android:textColor="@color/valueColor"/>
     </LinearLayout>
 
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="73sp"
             android:text="Проблема"
-            android:textSize="15dp"
+            android:textSize="20dp"
             android:textColor="@color/valueColor"/>
     </LinearLayout>
 
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="64sp"
             android:text="Ремонт"
-            android:textSize="15dp"
+            android:textSize="20dp"
             android:textColor="@color/valueColor"/>
     </LinearLayout>
 
@@ -85,7 +85,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="20sp"
             android:text="цена"
-            android:textSize="15dp"
+            android:textSize="20dp"
             android:textColor="@color/valueColor"/>
     </LinearLayout>
 
@@ -102,7 +102,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="50sp"
             android:text="пользователь"
-            android:textSize="15dp"
+            android:textSize="20dp"
             android:textColor="@color/valueColor"/>
     </LinearLayout>
 
@@ -119,7 +119,24 @@
             android:layout_height="wrap_content"
             android:paddingLeft="85sp"
             android:text="дата"
-            android:textSize="15dp"
+            android:textSize="20dp"
+            android:textColor="@color/valueColor"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView android:text="@string/status" android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/itemName"/>
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="85sp"
+            android:text="состояние"
+            android:textSize="20dp"
             android:textColor="@color/valueColor"/>
     </LinearLayout>
 
