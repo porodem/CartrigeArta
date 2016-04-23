@@ -1,11 +1,17 @@
 <resources>
     <string name="app_name">Cartrige Arta</string>
     <string name="add_btn">ADD</string>
-    <string name="input_mark">Add cartrige</string>
+    <string name="input_mark">Новый картридж (код)</string>
+    <string name="choose_status">Состояние картриджа</string>
 
     <string name="show_record">Show</string>
     <string name="edit_record">Edit</string>
     <string name="del_record">Delete</string>
+
+    <string name="in_use">в работе</string>
+    <string name="empty">пустые</string>
+    <string name="refill">заправка</string>
+    <string name="full">резерв</string>
 
     <string name="model">Модель</string>
     <string name="mark">Код</string>

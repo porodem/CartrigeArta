@@ -13,10 +13,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -35,6 +37,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     SimpleCursorAdapter scAdapter;
     Cursor c;
 
+    Button showInUse;
+    Button showEmpty;
+    Button showService;
+    Button showReady;
+
+    String lastElementNumInUse;
+    String lastElementNumEmpty;
+    String lastElementNumService;
+    String lastElementNumReady;
+
+
+
     //constants for context menu
     private static final int CM_SHOW = 1;
     private static final int CM_EDIT = 2;
@@ -46,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //btnAdd = (Button)findViewById(R.id.btnAdd);
 
         //open DB connections
         db = new DB(this);
@@ -65,43 +81,30 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         //create loader for data reading
         getLoaderManager().initLoader(0, null, this);
+
+        getAllCounter();
+
     }
 
-    //Button "ADD"
-    public void onButtonAdd(View view) {
-        //Toast.makeText(this, "ADD Button: ", Toast.LENGTH_SHORT).show();
-        LayoutInflater li = LayoutInflater.from(context);
-        View promptsView = li.inflate(R.layout.prompt, null);
-        //create alert Dialog
-        AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(context);
-        //config prompt.xml for our AlertDialog
-        mDialogBuilder.setView(promptsView);
-        //
-        final EditText userInput = (EditText)promptsView.findViewById(R.id.input_cartridge);
-        //config message in dialog
-        mDialogBuilder
-                .setCancelable(false)
-                .setPositiveButton("OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                String cartridgeMark = userInput.getText().toString();
-                                db.addRec(cartridgeMark);
-                                //get new cursor with data
-                                getLoaderManager().getLoader(0).forceLoad();
-                                //Toast.makeText(getBaseContext(), "message: " , Toast.LENGTH_LONG).show();
-                            }
-                        })
-                .setNegativeButton("Cancle",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-        //create dialog
-        AlertDialog alertDialog = mDialogBuilder.create();
-        //show it
-        alertDialog.show();
+    public void getAllCounter() {
+        lastElementNumInUse = db.getItemsCountInUse();
+        lastElementNumEmpty = db.getItemsCountEmpty();
+        lastElementNumService = db.getItemsCountService();
+        lastElementNumReady = db.getItemsCountReady();
+
+
+        showInUse = (Button)findViewById(R.id.btnShowInUse);
+        showEmpty = (Button)findViewById(R.id.btnShowEmpty);
+        showService = (Button)findViewById(R.id.btnShowService);
+        showReady = (Button)findViewById(R.id.btnShowFull);
+
+        showInUse.setText(lastElementNumInUse);
+        showEmpty.setText(lastElementNumEmpty);
+        showService.setText(lastElementNumService);
+        showReady.setText(lastElementNumReady);
     }
+
+
 
 
     //cursor logging
@@ -158,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     intentShow.putExtra("tvProblem", CartProblem);
                     intentShow.putExtra("tvFix", CartFix);
                     intentShow.putExtra("tvCost", CartCost);
-                    intentShow.putExtra("tvUer", CartUser);
+                    intentShow.putExtra("tvUser", CartUser);
                     intentShow.putExtra("tvDate", CartDate);
                     intentShow.putExtra("tvStatus", CartStatus);
                     startActivity(intentShow);
@@ -188,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     intentEdit.putExtra("tvProblem", CartProblem);
                     intentEdit.putExtra("tvFix", CartFix);
                     intentEdit.putExtra("tvCost", CartCost);
-                    intentEdit.putExtra("tvUer", CartUser);
+                    intentEdit.putExtra("tvUser", CartUser);
                     intentEdit.putExtra("tvDate", CartDate);
                     intentEdit.putExtra("tvStatus",CartStatus);
                     startActivity(intentEdit);
@@ -217,6 +220,65 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         db.close();
     }
 
+    // ActionBar menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.my_act_bar, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+//copied from ADD button
+                //Toast.makeText(this, "ADD Button: ", Toast.LENGTH_SHORT).show();
+                LayoutInflater li = LayoutInflater.from(context);
+                View promptsView = li.inflate(R.layout.prompt, null);
+                //create alert Dialog
+                AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(context);
+                //config prompt.xml for our AlertDialog
+                mDialogBuilder.setView(promptsView);
+                //
+                final EditText userInput = (EditText)promptsView.findViewById(R.id.input_cartridge);
+                //config message in dialog
+                mDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        String cartridgeModel = userInput.getText().toString();
+                                        //check for exsist mark
+                                        if (db.checkForExsist(cartridgeModel)) {
+                                            Log.d(LOG_TAG, "-- no repeated - Mark Added --");
+                                            db.addRec(cartridgeModel);
+                                        } else {
+                                            Log.d(LOG_TAG, "---- mark alredy exist ----");
+                                            Toast.makeText(getBaseContext(), "Такой код уже есть!", Toast.LENGTH_LONG).show();
+                                        }
+
+                                        //get new cursor with data
+                                        getAllCounter();
+                                        getLoaderManager().getLoader(0).forceLoad();
+
+                                        //Toast.makeText(getBaseContext(), "message: " , Toast.LENGTH_LONG).show();
+                                    }
+                                })
+                        .setNegativeButton("Cancle",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                //create dialog
+                AlertDialog alertDialog = mDialogBuilder.create();
+                //show it
+                alertDialog.show();
+        }
+        return true;
+
+
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
         return new MyCursorLoader(this, db);
@@ -232,6 +294,42 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
+    //Button Show Full Cartridge
+    public void onButtonShowFull(View view) {
+        //Temporary use for TEST
+        //Intent intent = new Intent(MainActivity.this, TestActivity.class);
+        //startActivity(intent);
+        db.changeButton("full");
+        getLoaderManager().getLoader(0).forceLoad();
+    }
+
+    //Button "ADD"
+    public void onButtonAdd(View view) {
+        db.changeButton("use");
+        getLoaderManager().getLoader(0).forceLoad();
+    }
+
+
+
+    public void onButtonShowEmpty(View view) {
+        db.changeButton("empty");
+        getLoaderManager().getLoader(0).forceLoad();
+    }
+
+    public void onButtonShowService(View view) {
+        db.changeButton("service");
+        getLoaderManager().getLoader(0).forceLoad();
+    }
+
+
+
+    //my -----------------------------------TEST Button
+    //----------------------------------------------------------------------
+    public void test(View view) {
+        //String exist = db.checkForExsist();
+        Log.d(LOG_TAG, "MyLog: - checkForExsist SHOW: " );
+    }
+
 
 
     static class MyCursorLoader extends CursorLoader {
@@ -242,7 +340,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
         @Override
         public Cursor loadInBackground() {
-            Cursor cursor = db.getAllData();
+            Cursor cursor = db.showStatus();
             try {
                 TimeUnit.SECONDS.sleep(1);
             }catch (InterruptedException e) {

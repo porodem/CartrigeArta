@@ -68,7 +68,8 @@ public class DB {
     //put info to DB_TABLE
     public void addRec(String model) {
         ContentValues cv = new ContentValues();
-        cv.put(COLUMN_MODEL, model);
+        cv.put(COLUMN_MARK, model);
+        cv.put(COLUMN_STATUS, "full");
         long rowID = mDB.insert(DB_TABLE, null, cv);
         Log.d(LOG_TAG, "Added record with id: " + rowID);
 
@@ -139,6 +140,113 @@ public class DB {
     public void delRec(long id) {
         mDB.delete(DB_TABLE, COLUMN_ID + " = " + id, null);
         Log.d(LOG_TAG, "--- Deleted ID : " + id);
+    }
+
+    String curentButton = "";
+    //which button was pressed?
+    public void changeButton(String curentStatus) {
+        curentButton = curentStatus;
+    }
+
+    //Show concrete status
+    public Cursor showStatus() {
+        Log.d(LOG_TAG, "MyLog: - showStatus() - start ");
+        if (curentButton == null) {
+            Log.d(LOG_TAG, "MyLog: - showStatus() curentButton = null ");
+            curentButton = "TOTAL";
+        }
+        if (curentButton.equals("")){
+            Log.d(LOG_TAG, "MyLog: - showStatus() - currentButton TOTAL: " + curentButton);
+            return mDB.query(DB_TABLE, null, null, null, null, null, null, null);
+        } else {
+            Log.d(LOG_TAG, "MyLog: - showStatus() - currentButton ELSE: " + curentButton);
+            String selection = null;
+            String[] selectionArgs = null;
+            selection = "status = ?";
+            selectionArgs = new String[] { curentButton };
+            return mDB.query(DB_TABLE, null, selection, selectionArgs, null, null, null);
+        }
+    }
+
+    public boolean checkForExsist(String mark) {
+        Log.d(LOG_TAG, "-- checkForExsist --");
+        String selection = "mark = ?";
+        String xid = mark;
+        String [] selectionAgrs = new String[]{xid};
+        Log.d(LOG_TAG, "MyLog: - checkForExsist() - mark: "  + mark);
+
+        Cursor c = mDB.query(DB_TABLE, null, selection, selectionAgrs, null, null, null);
+        if (c.getCount() <= 0) {
+            c.close();
+            Log.d(LOG_TAG, "MyLog: - getCount() :  FALSE");
+            return true;
+
+        }
+        /*c.moveToLast();
+        int thisData = c.getColumnIndex(COLUMN_MARK);
+        String readyID = c.getString(thisData);
+        return readyID;
+        */
+        c.close();
+        Log.d(LOG_TAG, "MyLog: - getCount() :  TRUE");
+        return false;
+
+    }
+
+    public String getItemsCountInUse() {
+        String selection = null;
+        String[] selectionArgs = null;
+        selection = "status = ?";
+        selectionArgs = new String[]{"use"};
+        Cursor c = mDB.query(DB_TABLE, null, selection, selectionArgs, null, null, null);
+        c.moveToLast();
+        int lastItem = c.getCount();
+        String lastNum = Integer.toString(lastItem);
+        return lastNum;
+    }
+    public String getItemsCountEmpty() {
+        String selection = null;
+        String[] selectionArgs = null;
+        selection = "status = ?";
+        selectionArgs = new String[]{"empty"};
+        Cursor c = mDB.query(DB_TABLE, null, selection, selectionArgs, null, null, null);
+        c.moveToLast();
+        int lastItem = c.getCount();
+        String lastNum = Integer.toString(lastItem);
+        return lastNum;
+    }
+
+    public String getItemsCountService() {
+        String selection = null;
+        String[] selectionArgs = null;
+        selection = "status = ?";
+        selectionArgs = new String[]{"service"};
+        Cursor c = mDB.query(DB_TABLE, null, selection, selectionArgs, null, null, null);
+        c.moveToLast();
+        int lastItem = c.getCount();
+        String lastNum = Integer.toString(lastItem);
+        return lastNum;
+    }
+
+    public String getItemsCountReady() {
+        String selection = null;
+        String[] selectionArgs = null;
+        selection = "status = ?";
+        selectionArgs = new String[]{"full"};
+        Cursor c = mDB.query(DB_TABLE, null, selection, selectionArgs, null, null, null);
+        c.moveToLast();
+        int lastItem = c.getCount();
+        String lastNum = Integer.toString(lastItem);
+        return lastNum;
+    }
+
+    //Show full cartridge
+    public Cursor showFullCart() {
+        String selection = null;
+        String[] selectionArgs = null;
+        selection = "status = full";
+        //selectionArgs = new String[] { fcc };
+        return mDB.query(DB_TABLE, null, selection, null, null, null, null);
     }
 
     // ----- Class for create and handle DB -----
